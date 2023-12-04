@@ -34,6 +34,11 @@ Object.is(Number.NaN, NaN) // true
 
 NaN === 0/0 // false
 Object.is(NaN, 0/0) // true
+
+const a = {};
+const b = {};
+a === b //false
+Object.is(a,b) // false
 ```
 
 하지만 `Object.is()`를 사용한다고 하더라도 객체 비교에는 차이가 없습니다. 객체 비교는 메모리 참조와 동일합니다. 
@@ -43,7 +48,49 @@ Object.is([], []) //false
 ```
 
 이러한 `Object.is()`는 리엑트에서 state 값의 변경을 확인하기 위한 검사를 위해 사용됩니다. 
-state의 값이 변경되었다면 `false`를 변경되지 않았다면 `true`를 반환합니다. `Object.is`를 바탕으로 해서 리엑트는 객체의 얕은 비교를 실행합니다. `shallowEqual`은 객체의 첫 번째 깊이 까지 비교를 진행합니다. 
+state의 값이 변경되었다면 `false`를 변경되지 않았다면 `true`를 반환합니다. `Object.is`를 바탕으로 해서 리엑트는 객체의 얕은 비교를 실행합니다. 
+```jsx
+import { useState, useEffect } from 'react';
+
+function App() {
+  const [number, setNumber] = useState(100);
+  const [objNumber, setObjNumber] = useState({ counter: 100 });
+
+  const handleClick = () => setNumber(101);
+  const handleObjClick = () => setObjNumber({ counter: 101 });
+
+  useEffect(() => {
+    console.log(`change Number : ${number}`);
+  }, [number]);
+  useEffect(() => {
+    console.log(`Change objNumber : ${objNumber.counter}`);
+  }, [objNumber]);
+  return (
+    <>
+      <div>objNumber : {objNumber.counter}</div>
+      <div>number : {number}</div>
+      <button onClick={handleClick}>원시값 숫자 증가하기</button>
+      <button onClick={handleObjClick}>참조값 숫자 증가하기</button>
+      <div>App</div>
+    </>
+  );
+}
+
+export default App;
+```
+매번 obj의 경우 프로퍼티 내부의 값이 동등해도 계속 새롭게 객체를 생성하기 때문에, useEffect의 참조에서 새로운 값으로 이를 파악합니다.
+```
+App.tsx:11 change Number : 100
+App.tsx:14 Change objNumber : 100
+App.tsx:11 change Number : 101
+App.tsx:14 Change objNumber : 101
+App.tsx:14 Change objNumber : 101
+App.tsx:14 Change objNumber : 101
+App.tsx:14 Change objNumber : 101
+```
+
+
+`shallowEqual`은 객체의 첫 번째 깊이 까지 비교를 진행합니다. 이러한 `shallowEqual`은 `props` 값의 비교를 위해 사용됩니다.
 
 ```jsx
 import { memo, useEffect, useState } from 'react';
