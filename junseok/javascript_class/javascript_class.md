@@ -128,3 +128,24 @@ const developer: Developer = new Developer('jun', 'FE');
 > - 타입스크립트에서는 변수, 함수, 함수 반환값의 데이터 타입을 지정하기 위해 "타입 어노테이션"을 사용한다. 즉, 타입에 주석을 단다.
 한 번 식별자를 특정 타입으로 annotated 하면 해당 타입만 사용할 수 있다.
 다른 타입을 사용하게 되면 타입스크립트 컴파일러가 에러를 던진다.
+
+```ts
+class Car {
+  constructor(public model: string) {}
+
+  static hello() {
+    console.log(`Hello Car`);
+  }
+
+  run() {
+    console.log(`${this.model} run`);
+  }
+}
+
+const car= new Car("sonata")
+type NewCar = typeof Car // 생성자 함수 자체를 가리킵니다.
+type CarModel = Car //new 생성자를 통해 생성한 인스턴스를 가리킵니다.
+type key = keyof CarModel
+const model:key = "model"
+const value: CarModel[key] = "sonata"
+```
