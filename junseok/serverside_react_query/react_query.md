@@ -230,3 +230,8 @@ export default getQueryClient
 단점은 `dehydrate(getQueryClient())`를 실행할 때마다 이전에 이미 직렬화되어 현재 서버 컴포넌트와 관련이 없는 쿼리를 포함하여 전체 쿼리클라이언트를 직렬화하므로 불필요한 오버헤드가 발생합니다.
 
 즉 매번 새롭게 queryClient를 정의하는 이유는 메모리 낭비가 있을 수 있지만, hydrate와 prefetch에서 필요한 데이터만을 실행해서 렌더링 속도를 최적화 하기 위함입니다.
+
+## Reference
+- https://tanstack.com/query/v5/docs/react/guides/advanced-ssr
+- https://tanstack.com/query/v5/docs/react/guides/prefetching
+- https://tanstack.com/query/v5/docs/react/guides/ssr
